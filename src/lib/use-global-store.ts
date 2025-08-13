@@ -1,5 +1,4 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createStore } from "@/lib/createStore";
 
 type AlertConfig = {
   title?: string;
@@ -16,36 +15,33 @@ type State = {
 };
 
 type Actions = {
-  updateAlertOpen: (is: boolean) => void;
+  updateAlertOpen: (is: State["alertOpen"]) => void;
   showAlert: (config: AlertConfig) => void;
 };
 
 type Store = State & Actions;
 
-const useGlobalStore = create<Store>()(
-  persist(
-    (set) => ({
-      alertOpen: false,
-      alertConfig: null,
+const useGlobalStore = createStore<Store>(
+  (set) => ({
+    alertOpen: false,
+    alertConfig: null,
 
-      updateAlertOpen: (is) =>
-        set((state) => {
-          state.alertOpen = is;
-          if (!is) state.alertConfig = null;
-        }),
+    updateAlertOpen: (is) =>
+      set((state) => {
+        state.alertOpen = is;
+        if (!is) state.alertConfig = null;
+      }),
 
-      showAlert: (config) =>
-        set((state) => {
-          state.alertOpen = true;
-          state.alertConfig = config;
-        }),
-    }),
-    {
-      name: "global-store",
-      skipHydration: true,
-      partialize: (state) => ({}),
-    }
-  )
+    showAlert: (config) =>
+      set((state) => {
+        state.alertOpen = true;
+        state.alertConfig = config;
+      }),
+  }),
+  {
+    name: "global-store",
+    excludeFromPersist: ["alertOpen"],
+  }
 );
 
 const alert = (config: AlertConfig) => {

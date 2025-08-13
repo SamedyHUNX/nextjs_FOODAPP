@@ -8,11 +8,11 @@ import { AlertDialogProvider } from "./ui/alert-dialog-provider";
 
 const queryClient = new QueryClient();
 
-type ProvidersProp = {
+type ProvidersProps = {
   children: ReactNode;
 };
 
-const Providers = ({ children }: ProvidersProp) => {
+const Providers = ({ children }: ProvidersProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <NextThemesProvider
