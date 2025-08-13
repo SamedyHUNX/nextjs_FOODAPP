@@ -42,7 +42,8 @@ const useGlobalStore = create<Store>()(
     }),
     {
       name: "global-store",
-      partialize: (state) => ({ alertConfig: state.alertConfig }), // only persist alertConfig
+      skipHydration: true,
+      partialize: (state) => ({}),
     }
   )
 );
