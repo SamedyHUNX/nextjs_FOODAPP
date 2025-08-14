@@ -5,8 +5,11 @@ import { useDeleteCategory } from "../_services/use-category-mutation";
 import { useCategories } from "../_services/use-category-queries";
 import { Edit, Trash } from "lucide-react";
 import { alert } from "@/lib/use-global-store";
+import { useCategoriesStore } from "../_libs/use-category-store";
 
 const CategoryCards = () => {
+  const { updateSelectedCategoryId, updateCategoryDialogOpen } =
+    useCategoriesStore();
   const categoriesQuery = useCategories();
   const deleteCategoryMutation = useDeleteCategory();
 
@@ -23,7 +26,10 @@ const CategoryCards = () => {
               className="size-6"
               variant={"ghost"}
               size="icon"
-              onClick={() => {}}
+              onClick={() => {
+                updateSelectedCategoryId(item.id);
+                updateCategoryDialogOpen(true);
+              }}
             >
               <Edit />
             </Button>

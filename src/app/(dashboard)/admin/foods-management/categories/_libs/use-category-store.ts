@@ -16,14 +16,16 @@ const useCategoriesStore = createStore<Store>(
   (set) => ({
     selectedCategoryId: null,
     updateSelectedCategoryId: (id) =>
-      set((state) => {
-        state.selectedCategoryId = id;
-      }),
+      set((state) => ({
+        ...state,
+        selectedCategoryId: id,
+      })),
     categoryDialogOpen: false,
     updateCategoryDialogOpen: (is) =>
-      set((state) => {
-        state.categoryDialogOpen = is;
-      }),
+      set((state) => ({
+        ...state,
+        categoryDialogOpen: is,
+      })),
   }),
   {
     name: "categories-store",

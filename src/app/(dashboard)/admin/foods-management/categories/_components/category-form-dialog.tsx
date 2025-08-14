@@ -1,3 +1,4 @@
+"use client";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import {
   categoryDefaultValues,
@@ -11,21 +12,22 @@ import {
   useCreateCategory,
   useUpdateCategory,
 } from "../_services/use-category-mutation";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from "@radix-ui/react-dialog";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { DialogFooter, DialogHeader } from "@/components/ui/dialog";
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
 import { ControlledInput } from "@/components/ui/controlled-input";
+import { useEffect } from "react";
 
 type CategoryFormDialogProps = {
   smallTrigger?: boolean;
 };
-
 const CategoryFormDialog = ({ smallTrigger }: CategoryFormDialogProps) => {
   const form = useForm<CategorySchema>({
     defaultValues: categoryDefaultValues,
@@ -45,6 +47,26 @@ const CategoryFormDialog = ({ smallTrigger }: CategoryFormDialogProps) => {
 
   const isPending =
     createCategoryMutation.isPending || updateCategoryMutation.isPending;
+
+  useEffect(() => {
+    if (selectedCategoryId && categoryQuery.data) {
+      const selectedCategory = categoryQuery.data.find(
+        (category) => category.id === selectedCategoryId
+      );
+
+      if (selectedCategory) {
+        form.reset({
+          ...selectedCategory,
+          action: "update",
+        });
+      }
+    } else {
+      form.reset({
+        ...categoryDefaultValues,
+        action: "create",
+      });
+    }
+  }, [categoryQuery.data, form, selectedCategoryId]);
 
   const handleDialogOpenChange = (open: boolean) => {
     updateCategoryDialogOpen(open);
@@ -73,7 +95,7 @@ const CategoryFormDialog = ({ smallTrigger }: CategoryFormDialogProps) => {
     <Dialog open={categoryDialogOpen} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger asChild>
         {smallTrigger ? (
-          <Button size="icon" variant={"ghost"} type="button">
+          <Button size="icon" variant="ghost" type="button">
             <Plus />
           </Button>
         ) : (
@@ -83,7 +105,6 @@ const CategoryFormDialog = ({ smallTrigger }: CategoryFormDialogProps) => {
           </Button>
         )}
       </DialogTrigger>
-
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-2xl">
@@ -92,11 +113,15 @@ const CategoryFormDialog = ({ smallTrigger }: CategoryFormDialogProps) => {
         </DialogHeader>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormProvider {...form}>
-            <ControlledInput<CategorySchema>
-              name="name"
-              label="Name"
-              placeholder="Enter category name"
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <ControlledInput<CategorySchema>
+                  name="name"
+                  label="Name"
+                  placeholder="Enter category name"
+                />
+              </div>
+            </div>
           </FormProvider>
           <DialogFooter>
             <Button type="submit" isLoading={isPending}>
@@ -108,3 +133,4 @@ const CategoryFormDialog = ({ smallTrigger }: CategoryFormDialogProps) => {
     </Dialog>
   );
 };
+export { CategoryFormDialog };

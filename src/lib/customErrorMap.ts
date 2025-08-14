@@ -52,7 +52,7 @@ const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
       return { message: issue.message || "Invalid value" };
 
     default:
-      return { message: ctx.defaultError };
+      return { message: ctx?.defaultError || "Validation error" };
   }
 };
 
