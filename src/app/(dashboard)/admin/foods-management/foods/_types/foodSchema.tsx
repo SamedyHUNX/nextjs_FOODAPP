@@ -16,7 +16,7 @@ const foodSchema = z.intersection(
   }),
   z.discriminatedUnion("action", [
     z.object({ action: z.literal("create") }),
-    z.object({ action: z.literal("update") }),
+    z.object({ action: z.literal("update"), id: z.number() }),
   ])
 );
 
