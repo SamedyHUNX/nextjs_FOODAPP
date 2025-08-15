@@ -1,3 +1,5 @@
+"use server";
+
 import { PaginatedResult } from "@/lib/types/paginatedResult";
 import {
   foodFiltersSchema,
